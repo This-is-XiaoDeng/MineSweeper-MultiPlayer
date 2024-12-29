@@ -1,4 +1,5 @@
 import asyncio
+from fastapi import WebSocketDisconnect
 import copy
 import random
 from typing import TYPE_CHECKING
@@ -93,7 +94,12 @@ class Session:
 
     async def notice_all_players(self, subject: str, **kwargs) -> None:
         for player in self.players:
-            await player.send_json(0, subject=subject, **kwargs)
+            try:
+                await player.send_json(0, subject=subject, **kwargs)
+            except WebSocketDisconnect:
+                if subject == "session.finished":
+                    continue
+                await self.unset_session()
 
     def __del__(self) -> None:
         sessions.pop(self.id_)

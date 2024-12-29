@@ -52,6 +52,11 @@ class Player:
             return True
         return False
 
+    async def offline(self) -> None:
+        if self.session is not None:
+            await self.session.unset_session()
+        del self
+
     @requestable_function
     async def mark_block(self, pos: list[int]) -> None:
         if await self.check_pos_form(pos):
