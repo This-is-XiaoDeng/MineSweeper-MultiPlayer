@@ -33,7 +33,7 @@ class Player:
     @requestable_function
     async def get_game_map(self) -> None:
         if self.game_map is not None:
-            await self.send_json(game_map=self.game_map.get_game_map())
+            await self.send_json(my_map=self.game_map.get_game_map(), other_map=[value for key, value in self.session.get_all_game_maps().items() if key != self.name][0])
         else:
             await self.send_json(403)
 
@@ -71,14 +71,17 @@ class Player:
     async def handle_map_update(self, block: int) -> None:
             game_map = self.game_map.get_game_map()
             await self.send_json(block=block, game_map=game_map)
-            await self.session.notice_all_players("map.update", name=self.name, game_map=game_map)
+            await self.session.notice_all_players("map.updated", name=self.name, game_map=game_map)
             await self.check_map_status()
 
     async def check_map_status(self) -> None:
         await self.session.update_map_status(self, self.game_map.check_status())
 
     async def send_json(self, code: int = 200, **kwargs) -> None:
-        await self.ws.send_json({"code": code, "data": kwargs})
+        if 'subject' in kwargs:
+            await self.ws.send_json(kwargs)
+        else:
+            await self.ws.send_json({"code": code, "data": kwargs})
 
     def set_session(self, session: Session) -> None:
         self.session = session
@@ -104,6 +107,7 @@ class Player:
     async def start_matching(self) -> None:
         if self.session is not None:
             await self.send_json(403, details="您已经在一个 Session 里面了")
+        await self.send_json(200)
         for session in get_sessions().values():
             if session.is_matchable():
                 await session.add_player(self)
