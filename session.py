@@ -55,15 +55,20 @@ class Session:
         if check_result:
             await self.notice_all_players("player.win", name=player.name)
         else:
-            players = copy.deepcopy(self.players)
-            players.remove(player)
-            await self.notice_all_players("player.win", name=players[0].name)
+            p_ = [p for p in self.players if p.name != player.name][0]
+            await self.notice_all_players("player.win", name=p_.name)
         await self.unset_session()
 
     async def player_get_ready(self, player: "Player", ready: bool) -> None:
         await self.notice_all_players("player.ready", name=player.name, ready=ready)
         if all([p.ready for p in self.players]):
             asyncio.create_task(self.start_game())
+    
+    def get_all_game_maps(self) -> dict[str, list[list[int]]]:
+            l = {}
+            for p in self.players:
+                l[p.name] = p.game_map.get_game_map()
+            return l
 
     async def start_game(self) -> None:
         await self.send_map_to_player()

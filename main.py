@@ -3,10 +3,21 @@ import os
 from typing import Any
 from players import Player, get_player_count
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
+app = FastAPI()
 app = FastAPI()
 API_VERSION = 1
 
+
+# 配置 CORS 中间件
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # 允许所有来源
+    allow_credentials=True,
+    allow_methods=["*"],  # 允许所有 HTTP 方法
+    allow_headers=["*"],  # 允许所有 HTTP 头
+)
 
 @app.get("/")
 async def root() -> dict[str, Any]:
@@ -15,10 +26,11 @@ async def root() -> dict[str, Any]:
 async def handle_websocket_connect(ws: WebSocket, player: Player) -> None:
     while True:
         recv = await ws.receive_json()
+        print(recv)
         if "func" in recv:
             await player.handle_request(recv)
         else:
-            await ws.close(1400, "异常的数据包")
+            await ws.close(400, "异常的数据包")
             break
 
 
