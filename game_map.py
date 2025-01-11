@@ -15,7 +15,7 @@ def generate_game_map(width: int, height: int, count: int = 9) -> list[list[int]
             if game_map[y][x] == 10:
                 continue
             c = 0
-            for x1, y1 in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]:
+            for x1, y1 in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1), (x + 1, y + 1), (x + 1, y - 1), (x - 1, y - 1), (x - 1, y + 1)]:
                 if x1 < 0 or x1 >= width or y1 < 0 or y1 >= height:
                     continue
                 if game_map[y1][x1] == 10:

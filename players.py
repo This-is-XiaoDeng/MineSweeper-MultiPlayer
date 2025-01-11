@@ -78,10 +78,13 @@ class Player:
         await self.session.update_map_status(self, self.game_map.check_status())
 
     async def send_json(self, code: int = 200, **kwargs) -> None:
-        if 'subject' in kwargs:
-            await self.ws.send_json(kwargs)
-        else:
-            await self.ws.send_json({"code": code, "data": kwargs})
+        try:
+            if 'subject' in kwargs:
+                await self.ws.send_json(kwargs)
+            else:
+                await self.ws.send_json({"code": code, "data": kwargs})
+        except RuntimeError:
+            await self.offline()
 
     def set_session(self, session: Session) -> None:
         self.session = session
