@@ -55,7 +55,7 @@ class Player:
     async def offline(self) -> None:
         if self.session is not None:
             await self.session.unset_session()
-        del self
+        player_list.remove(self)
 
     @requestable_function
     async def mark_block(self, pos: list[int]) -> None:
@@ -115,8 +115,6 @@ class Player:
         self.set_session(Session())
         await self.session.add_player(self)
 
-    def __del__(self) -> None:
-        player_list.remove(self)
 
 
 def get_player_count() -> int:
