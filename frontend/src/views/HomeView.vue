@@ -8,18 +8,24 @@ const ready_to_join = ref(false)
 const name = ref(null)
 
 function updateServerStatus() {
-    return new Promise(async () => {
-        const data = await getServerStatus();
-        if (data['code'] === 200) {
-            stat_text.value = `成功与服务器通信，在线人数: ${data['data']['online']}`;
-            ready_to_join.value = true;
-        } else {
-            stat_text.value = '服务器异常';
-        }
-    });
+  return new Promise(async () => {
+    try {
+      const data = await getServerStatus();
+      if (data['code'] === 200) {
+        stat_text.value = `成功与服务器通信，在线人数: ${data['data']['online']}`;
+        ready_to_join.value = true;
+      } else {
+        stat_text.value = '服务器异常';
+      }
+    } catch (error) {
+      stat_text.value = String(error)
+    }
+  });
 }
 onMounted(() => {
-    updateServerStatus();
+  updateServerStatus();
+  ready_to_join.value = false;
+  name.value = null;
 });
 
 async function join(name) {
@@ -54,11 +60,10 @@ async function join(name) {
             <button class="btn btn-primary" type="button" @click="join(name)" id="button-addon2">加入游戏</button>
           </div>
         </div>
-        <p>{{ stat_text }}<a v-if="!ready_to_join" @click="location.reload()">刷新</a></p>
+        <p>{{ stat_text }} <a v-if="!ready_to_join" href="javascript:location.reload()">刷新</a></p>
       </div>
     </div>
   </div>
 </template>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

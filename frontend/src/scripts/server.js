@@ -1,12 +1,15 @@
+import router from "@/router"
+
 const HOST = "10.21.0.101:8080"
+let ws = null
+let listeners = []
+let selfName = null
 
 export async function getServerStatus() {
     const response = await fetch(`http://${HOST}/`)
     return response.json()
 }
 
-let ws = null
-let listeners = []
 
 function handleMessage(origin_message) {
     let message = JSON.parse(origin_message.data)
@@ -35,7 +38,7 @@ export function bindListener(type, callback) {
     listeners.push({type: type, callback: callback, id: id})
 }
 
-let selfName = null
+
 
 function waitForMessage(type) {
     return new Promise((resolve) => {
@@ -48,9 +51,16 @@ function waitForMessage(type) {
 }
 
 
+async function handleConnectionClosed() {
+    alert("与服务器的连接发生异常，正在返回到登录页面 ...")
+    await router.push("/")
+}
+
 export function createWebSocketConnection() {
     ws = new WebSocket(`ws://${HOST}/ws`)
     ws.onmessage = handleMessage
+    ws.onerror = handleConnectionClosed
+    ws.onclose = handleConnectionClosed
     return new Promise((resolve) => {
         ws.onopen = () => {
             resolve()
