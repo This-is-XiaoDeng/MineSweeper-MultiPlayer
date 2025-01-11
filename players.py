@@ -84,7 +84,8 @@ class Player:
             else:
                 await self.ws.send_json({"code": code, "data": kwargs})
         except RuntimeError:
-            await self.offline()
+            if kwargs.get('subject') != 'session.finished':
+                await self.offline()
 
     def set_session(self, session: Session) -> None:
         self.session = session

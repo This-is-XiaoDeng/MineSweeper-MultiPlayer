@@ -44,7 +44,7 @@ async function join(name) {
 </script>
 
 <template>
-  <span class="h1">Mine Swapper</span>
+  <span class="h1">Mine Sweeper</span>
   <span class="badge">
     <span class="bg-success">MultiPlayer</span>
     <span class="bg-secondary">V1</span>
