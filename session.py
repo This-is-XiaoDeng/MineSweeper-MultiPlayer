@@ -86,8 +86,8 @@ class Session:
     async def unset_session(self) -> None:
         await self.notice_all_players("session.finished")
         for p in self.players:
-            p.unset_session()
-        del self
+            p.unset_session() 
+        sessions.pop(self.id_)
 
     async def send_map_to_player(self) -> None:
         origin_map = generate_game_map(9, 9, 9)
@@ -106,8 +106,6 @@ class Session:
                     continue
                 await self.unset_session()
 
-    def __del__(self) -> None:
-        sessions.pop(self.id_)
 
 def get_sessions() -> dict[str, "Session"]:
     return sessions

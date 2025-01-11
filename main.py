@@ -31,7 +31,7 @@ async def handle_websocket_connect(ws: WebSocket, player: Player) -> None:
             await player.handle_request(recv)
         else:
             await ws.close(400, "异常的数据包")
-            break
+            raise ValueError("数据包异常")
 
 
 @app.websocket("/ws")
@@ -40,8 +40,9 @@ async def websocket_endpoint(ws: WebSocket) -> None:
     player = Player(ws)
     try:
         await handle_websocket_connect(ws, player)
-    except WebSocketDisconnect:
+    except (ValueError, WebSocketDisconnect, RuntimeError) as e:
         await player.offline()
+        raise e
 
 
 if __name__ == "__main__":
