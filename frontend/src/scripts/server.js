@@ -1,12 +1,17 @@
 import router from "@/router"
 
 const HOST = import.meta.env.VITE_HOST
+if (import.meta.env.VITE_ENABLE_SSL) {
+  const PROTOCOL_POSTFIX = "s"
+} else {
+  const PROTOCOL_POSTFIX = "";
+}
 let ws = null
 let listeners = []
 let selfName = null
 
 export async function getServerStatus() {
-    const response = await fetch(`http://${HOST}/`)
+    const response = await fetch(`http${PROTOCOL_POSTFIX}://${HOST}/`)
     return response.json()
 }
 
@@ -57,7 +62,7 @@ async function handleConnectionClosed() {
 }
 
 export function createWebSocketConnection() {
-    ws = new WebSocket(`ws://${HOST}/ws`)
+    ws = new WebSocket(`ws${PROTOCOL_POSTFIX}://${HOST}/ws`)
     ws.onmessage = handleMessage
     ws.onerror = handleConnectionClosed
     ws.onclose = handleConnectionClosed
