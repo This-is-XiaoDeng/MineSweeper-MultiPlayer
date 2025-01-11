@@ -45,4 +45,4 @@ async def websocket_endpoint(ws: WebSocket) -> None:
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host=os.environ.get("SERVER_HOST", "0.0.0.0"), port=int(os.environ.get("PORT", 8080))
+    uvicorn.run(app, host=os.environ.get("SERVER_HOST", "0.0.0.0"), port=int(os.environ.get("PORT", 8080)))
