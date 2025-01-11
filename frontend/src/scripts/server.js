@@ -1,10 +1,9 @@
 import router from "@/router"
 
-const HOST = import.meta.env.VITE_HOST
+coinst HOST = import.meta.env.VITE_HOST
+const PROTOCOL_POSTFIX = "";
 if (import.meta.env.VITE_ENABLE_SSL) {
   const PROTOCOL_POSTFIX = "s"
-} else {
-  const PROTOCOL_POSTFIX = "";
 }
 let ws = null
 let listeners = []
