@@ -1,6 +1,6 @@
 import router from "@/router"
 
-const HOST = "10.21.0.101:8080"
+const HOST = import.meta.env.VITE_HOST
 let ws = null
 let listeners = []
 let selfName = null
