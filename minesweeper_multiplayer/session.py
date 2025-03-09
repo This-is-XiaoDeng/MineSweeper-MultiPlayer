@@ -4,11 +4,11 @@ import copy
 import random
 from typing import TYPE_CHECKING
 import uuid
-from game_map import generate_game_map, rotate_map, MineSweeperMap
 from enum import Enum
+from .game_map import generate_game_map, rotate_map, MineSweeperMap
 
 if TYPE_CHECKING:
-    from players import Player
+    from .players import Player
 
 sessions: dict[str, "Session"] = {}
 

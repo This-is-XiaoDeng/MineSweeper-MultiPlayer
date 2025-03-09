@@ -1,8 +1,9 @@
 from typing import Any, Awaitable, Callable, Optional
-from session import Session, get_sessions
 from fastapi import WebSocket
 import random
-from game_map import MineSweeperMap
+
+from .game_map import MineSweeperMap
+from .session import Session, get_sessions
 
 player_list: list["Player"] = []
 FUNCTIONS = []

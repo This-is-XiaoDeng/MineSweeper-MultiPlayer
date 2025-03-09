@@ -1,11 +1,11 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 import os
 from typing import Any
-from players import Player, get_player_count
 import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+from .players import Player, get_player_count
+
 app = FastAPI()
 API_VERSION = 1
 
